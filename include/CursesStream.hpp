@@ -158,7 +158,7 @@ private:
 };
 
 
-extern Attrset Bold;
+extern Attrset Bold, Normal;
 
 
 #endif // CURSESSTREAM_H
