@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -29,10 +31,30 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-DNCURSES_NOMACROS" />
+			<Add directory="include" />
 		</Compiler>
+		<Linker>
+			<Add option="-lncursesw" />
+			<Add option="-lreadline" />
+		</Linker>
+		<Unit filename="include/Client.hpp" />
+		<Unit filename="include/CursesStream.hpp" />
+		<Unit filename="include/CursesStreamBuf.hpp" />
+		<Unit filename="include/Input.hpp" />
+		<Unit filename="include/StringUtil.hpp" />
+		<Unit filename="include/Vec.hpp" />
+		<Unit filename="include/Window.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Client.cpp" />
+		<Unit filename="src/CursesStream.cpp" />
+		<Unit filename="src/CursesStreamBuf.cpp" />
+		<Unit filename="src/Input.cpp" />
+		<Unit filename="src/StringUtil.cpp" />
+		<Unit filename="src/Window.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

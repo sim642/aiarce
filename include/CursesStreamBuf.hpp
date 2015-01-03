@@ -5,7 +5,7 @@
 #include <ncursesw/ncurses.h>
 #include <boost/noncopyable.hpp>
 
-class CursesStreamBuf : public std::streambuf, public boost::noncopyable
+class CursesStreamBuf : public std::streambuf, virtual public boost::noncopyable
 {
 public:
     explicit CursesStreamBuf(WINDOW * const new_win);

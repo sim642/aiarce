@@ -7,7 +7,7 @@
 #include "Vec.hpp"
 #include <utility>
 
-class CursesStream : virtual private CursesStreamBuf, public std::ostream
+class CursesStream : /*virtual*/ private CursesStreamBuf, public std::ostream
 {
 public:
     CursesStream(WINDOW * const win);
@@ -53,37 +53,29 @@ private:
     Vec pos;
 };
 
-class attrs
+inline CursesStream& Refresh(CursesStream &out)
 {
-public:
-    attrs(const chtype &new_ch) : ch(new_ch)
-    {
-
-    }
-
-    friend CursesStream& operator<< (CursesStream &out, const attrs &at)
-    {
-        attrset(at.ch);
-        return out;
-    }
-
-    friend CursesStream& operator<< (CursesStream &out, attrs &&at)
-    {
-        attrset(at.ch);
-        return out;
-    }
-private:
-    chtype ch;
-};
-
-inline CursesStream& normal(CursesStream &out)
-{
-    return out << attrs(A_NORMAL);
+    wrefresh(out);
+    return out;
 }
 
-inline CursesStream& bold(CursesStream &out)
+inline CursesStream& ClrToEol(CursesStream &out)
 {
-    return out << attrs(A_BOLD);
+    int x, y;
+    getyx(out, y, x);
+    if (x + 1 < getmaxx(out)) // don't clear of blocked
+        wclrtoeol(out);
+    return out;
+}
+
+inline CursesStream& ClrToBot(CursesStream &out)
+{
+    int x, y, maxx, maxy;
+    getyx(out, y, x);
+    getmaxyx(out, maxy, maxx);
+    if (y + 1 < maxy || (y + 1 == maxy && x + 1 < maxx)) // don't clear of blocked
+        wclrtobot(out);
+    return out;
 }
 
 class Attron
