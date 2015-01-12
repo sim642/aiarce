@@ -4,8 +4,8 @@
 #include "Input.hpp"
 #include <iostream>
 #include "CursesStream.hpp"
+#include "CursesManip.hpp"
 #include <cstring>
-
 #include <csignal>
 #include <sys/ioctl.h>
 #include <cstdio>

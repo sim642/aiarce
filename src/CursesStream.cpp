@@ -15,5 +15,4 @@ CursesStream::operator WINDOW * const() const
     return win;
 }
 
-Attrset Bold(A_BOLD), Normal(A_NORMAL);
 

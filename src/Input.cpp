@@ -1,4 +1,5 @@
 #include "Input.hpp"
+#include "CursesManip.hpp"
 #include "StringUtil.hpp"
 #include <readline/readline.h>
 #include <readline/history.h>
