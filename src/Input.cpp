@@ -52,12 +52,14 @@ int Input::input_available()
 
 void Input::redisplay_hook()
 {
-    int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
-    int len = Input::window->length();
-    view_point = std::max(0, (pos - len % 2) / (len / 2) - 1) * (len / 2);
-    cur_point = pos - view_point;
+    std::wstring prompt = to_wide(rl_display_prompt);
 
-    *Input::window << Move({0, 0}) << from_wide(to_wide(rl_line_buffer).substr(view_point, len)) << ClrToBot << Refresh;
+    int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
+    int len = std::max<int>(0, Input::window->length() - prompt.length());
+    view_point = len == 0 ? 0 : std::max(0, (pos - len % 2) / (len / 2) - 1) * (len / 2);
+    cur_point = pos - view_point + prompt.length();
+
+    *Input::window << Move({0, 0}) << from_wide(prompt) << from_wide(to_wide(rl_line_buffer).substr(view_point, len)) << ClrToBot << Refresh;
 
     /*mvwprintw(*Input::window, 0, 0, "%s%s%d", rl_display_prompt, rl_line_buffer, wstr.size());
     wclrtobot(*Input::window);
