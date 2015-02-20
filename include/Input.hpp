@@ -7,6 +7,8 @@
 #include <string>
 #include <sys/types.h>
 
+int printWidth(const std::string &line);
+
 class Input : public boost::noncopyable
 {
 public:

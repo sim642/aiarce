@@ -42,6 +42,7 @@
 			<Add option="-lreadline" />
 		</Linker>
 		<Unit filename="include/Client.hpp" />
+		<Unit filename="include/CursesManip.hpp" />
 		<Unit filename="include/CursesStream.hpp" />
 		<Unit filename="include/CursesStreamBuf.hpp" />
 		<Unit filename="include/Input.hpp" />
@@ -50,6 +51,7 @@
 		<Unit filename="include/Window.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Client.cpp" />
+		<Unit filename="src/CursesManip.cpp" />
 		<Unit filename="src/CursesStream.cpp" />
 		<Unit filename="src/CursesStreamBuf.cpp" />
 		<Unit filename="src/Input.cpp" />

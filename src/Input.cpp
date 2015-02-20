@@ -14,6 +14,19 @@ Window *Input::window = nullptr;
 int Input::view_point = 0;
 int Input::cur_point = 0;
 
+int printWidth(const std::string &line)
+{
+    WINDOW *off = newwin(0, 0, 0, 0);
+    wprintw(off, "%s", line.c_str());
+
+    int y, x, my, mx;
+    getyx(off, y, x);
+    getmaxyx(off, my, mx);
+    int ret = x + y * mx;
+    delwin(off);
+    return ret;
+}
+
 void Input::setup(Window * const new_window)
 {
     cbreak();
@@ -23,7 +36,7 @@ void Input::setup(Window * const new_window)
 
     Input::window = new_window;
     //rl_callback_handler_install(">", Input::line_hook);
-    rl_callback_handler_install("", Input::line_hook);
+    rl_callback_handler_install("->", Input::line_hook);
     rl_input_available_hook = Input::input_available;
     rl_redisplay_function = Input::redisplay_hook;
 
@@ -54,7 +67,8 @@ void Input::redisplay_hook()
 {
     std::wstring prompt = to_wide(rl_display_prompt);
 
-    int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
+    //int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
+    int pos = printWidth(std::string(rl_line_buffer, rl_point));
     int len = std::max<int>(0, Input::window->length() - prompt.length());
     view_point = len == 0 ? 0 : std::max(0, (pos - len % 2) / (len / 2) - 1) * (len / 2);
     cur_point = pos - view_point + prompt.length();

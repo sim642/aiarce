@@ -53,27 +53,15 @@ int main()
 
     Input::line_func = [&](const string &line)
         {
-            //CursesStream out(mainWindow);
-
-            mainWindow << Move({0, 1}) << "<" << +Bold << line << -Bold << ">" << ClrToEol << Refresh;
-
-            //wclrtoeol(mainWindow);
-
-            //mvwprintw(mainWindow, 0, 0, "<%s>", line.c_str());
-            //wclrtoeol(mainWindow);
-            //wrefresh(mainWindow);
+            mainWindow << Move({0, 1}) << "<" << +Bold << line << -Bold << "> " << printWidth(line) << ClrToEol << Refresh;
         };
     Input::setup(&inputWindow);
-
 
     i = 0;
     while (1)
     {
         Input::handle();
 
-        /*mvwprintw(mainWindow, 4, 0, "%d %d - %d", getmaxx(stdscr), getmaxy(stdscr), i);
-        wclrtoeol(mainWindow);
-        wrefresh(mainWindow);*/
         mainWindow << Move({0, 4}) << mainWindow.size().x << " " << mainWindow.size().y << " - " << i << ClrToEol << Refresh;
 
         Input::fixCursor();
