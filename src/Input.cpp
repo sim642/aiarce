@@ -4,6 +4,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <cstdlib>
+#include <vector>
 #include <sys/time.h>
 #include <sys/select.h>
 #include <unistd.h>
@@ -65,6 +66,57 @@ int Input::input_available()
 
 void Input::redisplay_hook()
 {
+    std::string bytes(rl_line_buffer);
+    std::wstring chars;
+
+    std::vector<int> byte2char;
+    std::vector<int> char2byte;
+    std::vector<int> char2width;
+    std::vector<int> width2char;
+
+    std::mbstate_t state = std::mbstate_t();
+    int n = 0;
+    int cnt;
+    wchar_t wc;
+    while ((cnt = mbrtowc(&wc, bytes.c_str() + n, bytes.size() - n, &state)) > 0)
+    {
+        chars.push_back(wc);
+
+        for (int i = 0; i < cnt; i++)
+            byte2char.push_back(chars.size() - 1);
+
+        char2byte.push_back(n);
+
+        char2width.push_back(width2char.size());
+        int width = printWidth(bytes.substr(n, cnt));
+        for (int i = 0; i < width; i++)
+            width2char.push_back(chars.size() - 1);
+
+        n += cnt;
+    }
+
+    move(15, 0);
+    printw("bytes: ");
+    for (char &byte : bytes)
+        printw("%x ", byte & 0xFF);
+    printw("\nchars: ");
+    for (wchar_t &ch : chars)
+        printw("%x ", ch);
+    printw("\nb2c: ");
+    for (int &b2c : byte2char)
+        printw("%d ", b2c);
+    printw("\nc2b: ");
+    for (int &c2b : char2byte)
+        printw("%d ", c2b);
+    printw("\nc2w: ");
+    for (int &c2w : char2width)
+        printw("%d ", c2w);
+    printw("\nw2c: ");
+    for (int &w2c : width2char)
+        printw("%d ", w2c);
+    clrtobot();
+    refresh();
+
     std::wstring prompt = to_wide(rl_display_prompt);
 
     //int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
