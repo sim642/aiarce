@@ -28,6 +28,14 @@ int printWidth(const std::string &line)
     return ret;
 }
 
+std::string cutWidth(const std::string &line, int width)
+{
+    std::string ret;
+    for (auto it = line.begin(); it != line.end() && printWidth(ret) < width; ++it)
+        ret += *it;
+    return ret;
+}
+
 void Input::setup(Window * const new_window)
 {
     cbreak();
@@ -123,9 +131,9 @@ void Input::redisplay_hook()
     int pos = printWidth(std::string(rl_line_buffer, rl_point));
     int len = std::max<int>(0, Input::window->length() - prompt.length());
     view_point = len == 0 ? 0 : std::max(0, (pos - len % 2) / (len / 2) - 1) * (len / 2);
-    cur_point = pos - view_point + prompt.length();
+    cur_point = pos - printWidth(std::string(rl_line_buffer, rl_line_buffer + view_point)) + prompt.length();
 
-    *Input::window << Move({0, 0}) << from_wide(prompt) << from_wide(to_wide(rl_line_buffer).substr(view_point, len)) << ClrToBot << Refresh;
+    *Input::window << Move({0, 0}) << from_wide(prompt) << cutWidth(from_wide(to_wide(rl_line_buffer).substr(view_point)), len) << ClrToBot << Refresh;
 
     /*mvwprintw(*Input::window, 0, 0, "%s%s%d", rl_display_prompt, rl_line_buffer, wstr.size());
     wclrtobot(*Input::window);
