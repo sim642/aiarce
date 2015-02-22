@@ -75,6 +75,7 @@ int Input::input_available()
 void Input::redisplay_hook()
 {
     std::string bytes(rl_line_buffer);
+    bytes.push_back('X'); // invisible EOL char to handle cursor after the string
     std::wstring chars;
 
     std::vector<int> byte2char;
@@ -127,13 +128,15 @@ void Input::redisplay_hook()
 
     std::wstring prompt = to_wide(rl_display_prompt);
 
-    //int pos = to_wide(std::string(rl_line_buffer, rl_point)).size();
-    int pos = printWidth(std::string(rl_line_buffer, rl_point));
+    int cpos = byte2char[rl_point];
+    int wpos = char2width[cpos];
     int len = std::max<int>(0, Input::window->length() - prompt.length());
-    view_point = len == 0 ? 0 : std::max(0, (pos - len % 2) / (len / 2) - 1) * (len / 2);
-    cur_point = pos - printWidth(std::string(rl_line_buffer, rl_line_buffer + view_point)) + prompt.length();
+    view_point = char2width[width2char[len == 0 ? 0 : std::max(0, (wpos - len % 2) / (len / 2) - 1) * (len / 2)]];
+    cur_point = wpos - view_point + prompt.length();
 
-    *Input::window << Move({0, 0}) << from_wide(prompt) << cutWidth(from_wide(to_wide(rl_line_buffer).substr(view_point)), len) << ClrToBot << Refresh;
+    int first = char2byte[width2char[view_point]];
+    int second = char2byte[width2char[std::min<int>(width2char.size() - 1, view_point + len)]];
+    *Input::window << Move({0, 0}) << from_wide(prompt) << bytes.substr(first, second - first) << ClrToBot << Refresh;
 
     /*mvwprintw(*Input::window, 0, 0, "%s%s%d", rl_display_prompt, rl_line_buffer, wstr.size());
     wclrtobot(*Input::window);
