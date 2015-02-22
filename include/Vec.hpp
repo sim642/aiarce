@@ -29,6 +29,11 @@ inline Vec operator- (const Vec &lhs, const Vec &rhs)
     return Vec(lhs.x - rhs.x, lhs.y - rhs.y);
 }
 
+inline bool operator== (const Vec &lhs, const Vec &rhs)
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 inline bool operator< (const Vec &lhs, const Vec &rhs)
 {
     if (lhs.x < rhs.x)

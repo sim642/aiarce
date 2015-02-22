@@ -10,6 +10,7 @@ class Window : public CursesStream, virtual public boost::noncopyable
 {
 public:
     Window(WINDOW * const new_win);
+    Window(const Vec &pos, const Vec &size);
     Window(const Window &parentWindow, const Vec &pos, const Vec &size);
 
     virtual ~Window();

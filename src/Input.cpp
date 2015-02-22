@@ -87,6 +87,7 @@ void Input::redisplay_hook()
     int n = 0;
     int cnt;
     wchar_t wc;
+    Window offscreen({0, 0}, {0, 0});
     while ((cnt = mbrtowc(&wc, bytes.c_str() + n, bytes.size() - n, &state)) > 0)
     {
         chars.push_back(wc);
@@ -97,7 +98,8 @@ void Input::redisplay_hook()
         char2byte.push_back(n);
 
         char2width.push_back(width2char.size());
-        int width = printWidth(bytes.substr(n, cnt));
+        offscreen << Move({0, 0}) << bytes.substr(n, cnt);
+        int width = offscreen.pos().x;
         for (int i = 0; i < width; i++)
             width2char.push_back(chars.size() - 1);
 

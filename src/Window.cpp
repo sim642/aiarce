@@ -6,6 +6,11 @@ Window::Window(WINDOW * const new_win) : CursesStream(new_win), win(new_win)
 
 }
 
+Window::Window(const Vec &pos, const Vec &size) : Window(newwin(size.y, size.x, pos.y, pos.x))
+{
+
+}
+
 Window::Window(const Window &parentWindow, const Vec &pos, const Vec &size) : Window(derwin(parentWindow.win, size.y, size.x, pos.y, pos.x))
 {
 
@@ -20,6 +25,8 @@ Vec Window::pos() const
 {
     Vec ret;
     getparyx(win, ret.y, ret.x);
+    if (ret == Vec{-1, -1})
+        getyx(win, ret.y, ret.x);
     return ret;
 }
 
